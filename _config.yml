@@ -1,0 +1,21 @@
+# Site settings
+title: The Webway
+header-img: img/home-bg.png
+email: jon_p_stone@yahoo.com
+copyright_name: jonpstone
+description: > # this means to ignore newlines until "baseurl:"
+  Engineering Experiences For The Present And Future...
+baseurl: "" # the subpath of your site, e.g. /blog
+twitter_username: 
+github_username:  jonpstone
+learn_profile: jonpstone
+email_username: jon_p_stone@yahoo.com
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+permalink: pretty
+paginate: 5
+exclude: ["less","node_modules","Gruntfile.js","package.json","README.md"]
+
+gems: [jekyll-paginate, jekyll-feed]
