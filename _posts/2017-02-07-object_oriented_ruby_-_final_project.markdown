@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Object Oriented Ruby - Final Project Take 2?"
+title:  "Object Oriented Ruby - Final Project"
 date:   2017-02-07 15:40:44 -0500
 ---
 
