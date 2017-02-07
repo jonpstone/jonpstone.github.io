@@ -6,9 +6,7 @@ date:   2017-02-07 15:40:44 -0500
 
 **Background**
 
-So, this is my first blog post. I've actually been with Flatiron's online Learn.co campus for over six months now, there's been some personal stuff (nothing bad), work, Christmas, family and a not so healthy dose of procrastination getting in the way of progress. I also made the unwise choice of pushing on with the curriculum instead of stopping and taking the time to complete projects. While this is doable, I really would not recommend it. Going back from Rails, where I am now, to raw Ruby was, at times, frustrating and I also have to now switch back to Sinatra for that module's project, which I haven't touched in a good while. However here we are, I think I'm done with OO Ruby, with a bit of help from the resources made availiable on the lesson page, Corinna and some Googling, I got there; so below is a little on how I did it. Below is a link to the GitHub repo.
-
-[https://github.com/jonpstone/project-cli-dogparks](http://)
+So, this is my first blog post. I've actually been with Flatiron's online Learn.co campus for over six months now, there's been some personal stuff (nothing bad), work, Christmas, family and a not so healthy dose of procrastination getting in the way of progress. I also made the unwise choice of pushing on with the curriculum instead of stopping and taking the time to complete projects. While this is doable, I really would not recommend it. Going back from Rails, where I am now, to raw Ruby was, at times, frustrating and I also have to now switch back to Sinatra for that module's project, which I haven't touched in a good while. However here we are, I think I'm done with OO Ruby, with a bit of help from the resources made availiable on the lesson page, Corinna and some Googling, I got there; so below is a little on how I did it. Below is a link to the [GitHub repo](https://github.com/jonpstone/project-cli-dogparks).
 
 **Getting Started**
 
