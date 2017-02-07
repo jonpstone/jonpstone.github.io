@@ -15,6 +15,7 @@ One of the ways I got started here was by watching the great video done by Mr. F
 Once the completed I made a file in the `./bin` folder and adjusted the persmissions to make it executable. This was not a ruby file and required the 'shebang' on line 1. This would be the file which would launch my gem.
 
 *./bin/dog-parks*
+
 ```
 #!/usr/bin/env ruby
 
@@ -27,6 +28,7 @@ ProjectCliDogparks::CLI.new.call
 I then created a `cli.rb` and a `park.rb` class, both located in the `./lib/project_cli_dogparks` directory. The `project_cli_dogparks.rb` file also within `lib`, features an empty module (created by bundler), this was used, as the project progressed, to house the various requirements for the gem and any objects to interact; an environment.
 
 *./lib/projectclidogparks.rb*
+
 ```
 require "open-uri"
 require "nokogiri"
@@ -44,6 +46,7 @@ end
 This was the cogs and chains of the gem and would guide the user through the program. As you can see in `./bin/dog-parks`, the executable calls the `#call` method within the `cli.rb` class. This in turn then calls two methods within the class, first `#list_parks` and then `#choice`. We'll take a look at the former below.
 
 *./lib/projectclidogparks/cli*
+
 ```
   def list_parks
 	
@@ -59,6 +62,7 @@ This was the cogs and chains of the gem and would guide the user through the pro
 To kick things off for the user, they're greated with a simple string, which prints a welcome message to the terminal. I created and instance variable `@park` and assigned it the value of a new instance of `park.rb`. An 'each' loop cycles through that instance and returns an ordered list produced by a concatenated string of attritubes. This is taken from scraped data in `park.rb`, it includes the name of the dog park and the city it is located in. At this point the `#choice` method has been called, as evidenced by the final line printed in the terminal below. The user is presented with the following in their terminal.
 
 *TERMINAL*
+
 ```
 Welcome to the Plano area Dog Parks gem!
 1. Dog Park at Jack Carter Park - Plano, TX
@@ -70,6 +74,7 @@ Please make a selection or type 'exit' to leave or 'menu' to return to the list.
 It is then up to the user to decide which park they would like to know more about. When the selection is made the `#choice` method really gets put into action. In this method (see below code snippet) I set a variable called `input` equal to `nil`. After which, a 'while loop', which states that while the user `input` is greater than 0 and less then 4, begins. It is here that `input` is set to `gets.strip.downcase` in order to retrieve the relevant data for the user's selection. The new value of `input` is assessed further by more conditional logic in the form of an 'if statement'. This will discern whether the user wants to view item 1, 2 or 3, or whether they simply wish to return to the ordered list or exit the program. This method will also identify invalid choices and prompt the user to make another selection. If the user makes a choice within the indexed options, the method will pull data from the `@park` instance, now stored in the `user_park` variable. This block then returns a set of attributes for user_park within a heredoc.
 
 *./lib/projectclidogparks/cli*
+
 ```
   def choice
 	
@@ -108,10 +113,10 @@ In the case that a user wishes to exit, the `#so_long` method is called, which s
 So, down to the where the data comes from. It's time for `park.rb` to do it's stuff! As you may recall, when `#list_parks` is called by `cli.rb`'s `#call` method, it requires data from a class method called `#all` in `park.rb`. This method in turn calls another class method called `#scrape_parks`. The latter method houses an array called `parks`, this array is populated by a scraper method that I will talk about next. Below is `#all` and `#scrape_parks`.
 
 *./lib/projectclidogparks/park.rb*
+
 ```
   def self.all
 	
-    # Scrape Plano area dog park .gov websites for data.
     self.scrape_parks
 		
   end
@@ -129,9 +134,11 @@ So, down to the where the data comes from. It's time for `park.rb` to do it's st
   end
 ```
 
+
 For the sake of brevity I'll just share the scraping method for 'Ruff Range', which is the dog park located in Frisco, TX. Basically all the scraper methods are more or less the same (with the exception of some data that I irritatingly had to hard code, especially in the Plano method).
 
 *./lib/projectclidogparks/park.rb*
+
 ```
   def self.scrape_frisco
 	
