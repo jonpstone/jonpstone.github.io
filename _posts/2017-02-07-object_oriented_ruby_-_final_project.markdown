@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "OO Ruby - Final Project"
+title:  "OO Ruby: Final Project"
 date:   2017-02-07 15:40:44 -0500
 ---
 
