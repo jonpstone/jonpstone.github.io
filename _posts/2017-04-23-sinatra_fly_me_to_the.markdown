@@ -17,6 +17,8 @@ So I needed to think about what objects might be present in such an app and what
 
 How did I want the data displayed and where? I decided on a show all page for each class of object. I thought that tables were the best way of tidying up an unordered list, although I'll probably just use divs for my next project. These would be essentially `Stuff.all` style HTML pages, which I called 'Squadron Roster' for the *Pilots*, 'Aircraft Hangar' for the *Planes* and 'Station Armoury' for the *Weapons*. I also naturally wanted to be able to display one single selected object from each class and to be able to provide views for making, altering and removing data and objects as per CRUD. The end result is that I had three different Controllers that look rather similar, though I don't think that this, in of itself is perhaps all that unusual. There were some notable differences though, for example using the session hash was crucial for the *Pilots* controller and for Logging in/out,  creating *Pilots* and even Deleting; where I eventually figured out that I needed to put a `session.clear` line after where the `@pilot.delete` method was used.
 
+*./app/controllers/pilots_controller.rb*
+
 ```      
   delete '/pilots/:id/delete' do
     if logged_in?
@@ -37,7 +39,9 @@ In terms of file organization I followed much of what I had seen beforehand in t
 
 **Helpers**
 
-I made use of several helpers in this app that will be familiar to most, I placed them in the parent controller `application_controller.rb`.
+I made use of several helpers in this app that will be familiar to most, I placed them in the parent controller.
+
+*./app/controllers/application_controller.rb*
 
 ```
   helpers do
