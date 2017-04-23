@@ -18,11 +18,13 @@ So I needed to think about what objects might be present in such an app and what
 How did I want the data displayed and where? I decided on a show all page for each class of object. I thought that tables were the best way of tidying up an unordered list, although I'll probably just use divs for my next project. These would be essentially `Stuff.all` style HTML pages, which I called 'Squadron Roster' for the *Pilots*, 'Aircraft Hangar' for the *Planes* and 'Station Armoury' for the *Weapons*. I also naturally wanted to be able to display one single selected object from each class and to be able to provide views for making, altering and removing data and objects as per CRUD. The end result is that I had three different Controllers that look rather similar, though I don't think that this, in of itself is perhaps all that unusual. There were some notable differences though, for example using the session hash was crucial for the *Pilots* controller and for Logging in/out,  creating *Pilots* and even Deleting; where I eventually figured out that I needed to put a `session.clear` line after where the `@pilot.delete` method was used.
 
 ```      
-if @pilot.id == current_user.id
-	@pilot.delete
-end
-session.clear
-redirect to '/login'
+    if logged_in?
+      @pilot = Pilot.find(session[:id])
+      if @pilot.id == current_user.id
+        @pilot.delete
+      end
+      session.clear
+      redirect to '/login'
 ```
 
 In terms of file organization I followed much of what I had seen beforehand in the Sinatra Labs and also reused much of the non **app** or **db** files from my Fwitter assignment, though of course I had to edit some things like `config.ru`. Inside of **app**, I used the normal MVC sub-directory set up I had gotten used during labs.
