@@ -1,11 +1,13 @@
 ---
 layout: post
 title:  "Rails: The Late, Great Roger Ebert and his Effusions"
-date:   2017-08-23 16:57:07 +0000
+date:   2017-08-23 12:57:08 -0400
 ---
 
 
-**Background** ![](http://static.rogerebert.com/uploads/blog_post/primary_image/balder-and-dash/still-present-memories-of-roger-ebert-a-year-after-his-passing/primary_roger_ebert_54396.jpg)
+![](http://static.rogerebert.com/uploads/blog_post/primary_image/balder-and-dash/still-present-memories-of-roger-ebert-a-year-after-his-passing/primary_roger_ebert_54396.jpg)
+
+**Background**
 
 It's finally here. Two restarts, wrestling with Devise and then abondoning it when it wouldn't play ball with Omniauth, Carrierwave not on it's best behavoir, you name it. What I settled on for an idea was a web app that publishes scathing reviews of (what are generally considered to be by critics) terrible movies. The idea is that the app would be a collection point for the most, and quite often humorous reviews of bad movies. Needless to say, Roger Ebert (who until his death in 2013, was widley considered the Dean of American film critics), features heavily as he was famous for his reviews being so inventively mean that they were considered comedic. There would be no particular category of any one type of movie in this app, indeed, `Genre` was one of my central models. I wrote the code as though the app was to be created for a client. So I tried my best to abstract away any need whatsoever, for what I considered to be a need for the client to go into (or re-hire me to go back into) the source code.
 
@@ -89,11 +91,15 @@ class User < ApplicationRecord
 end
 ```
 
+**The Nested Nightmare**
+
+I had quite a fair bit of trouble with nested forms being saved when the parent object was being submitted. In the case of this app a `Review` `belongs_to` a `Writer` and a `Writer` `has_many` `Reviews`. I found that, possibly as a Rails 5 development (I'll look into it) that adding `inverse_of` after the association solves this issue. See the below snippet of the `Writer` model and the first line of **Fig.1**. I also had trouble incoprorating `Carrierwave`'s uploaders into the nested form and the only solution I could find was the use `accepts_nested_attributes_for`, which is a no no for this assessment. So I decided to remove validations for the images and when the `User` had complete the other input fields, upon submit, they would be rerouted to the edit page for that newly created `Review` and be directed to upload the required images by an alert box, this was far from ideal but it at least works. I think perhaps following my assessment I might implement the `accepts_nested_attributes_for` technique I found, or perhaps make a new template featuring fields only for the images and have the `User` be routed to that.
+
 **Controlling the Home Page**
 
 The only controller I'll go into in depth is the `HomeController`, the others have a fairly standard set up and are quite similar to one another and the `CommentsController` is covered in the link provided above. My index action's job was to fetch information from the `Review` model and populate the carousel feature within the home page's HTML (essentially the main item that the `User` encounters as a 'landing page'). In fact the only other stuff the `User` sees at this point is the `_header` and `_footer`. I had the index action perform the basic function of brining all the `Reviews` to one place and then letting the model do the rest.
 
-**Fig.4**
+**Fig.5**
 *./app/controllers/home_controller.rb*
 
 ```
