@@ -13,7 +13,7 @@ It's finally here. Two restarts, wrestling with Devise and then abondoning it wh
 
 **Models and Migrations**
 
-Of course, one of the many wonderful things (in this case a saving grace), about Rails, is that getting a function app off the ground and running can be done so rapidly. So, when you want to scrap everything and start over, twice, it really helps. I decided on three fundamental models that would form the core of the app: `Writer`, `Review` and `Genre`; the latter as stated above. `Genre` would actually be a very simple model that would only contain one attribute `genre_name`. The `Writer`, was effectively a kind of pseudo `User` model. It was seperate from the actual `User` model that I'll get to further down. I mean this in the sense that you do not **sign in** as a `Writer` - *this is not a blog app, this is not a blog app, this is not a blog app.* The `Writer` has very similar attributes to what a `User` would have on say, a social media platform, there's a `username` attribute, a `bio`, who they work for, etc. I saw no need to create an Active Record association between these two particular models. I did, as required, include a `has_many :through` association between `Genre` and `Review` as well as a `has_many` `belongs_to` relationship between `Writer` and `Review`. The `Review` model was probably the most complex so I'll just throw it out in a code snippet.
+Of course, one of the many wonderful things (in this case a saving grace), about Rails, is that getting a function app off the ground and running can be done so rapidly. So, when you want to scrap everything and start over, twice, it really helps. I decided on three fundamental models that would form the core of the app: `Writer`, `Review` and `Genre`; the latter as stated above. `Genre` would actually be a very simple model that would only contain one attribute `genre_name`. The `Writer`, was effectively a kind of pseudo `User` model. It was seperate from the actual `User` model that I'll get to further down. I mean this in the sense that you do not **sign in** as a `Writer` - *this is not a blog app, this is not a blog app, this is not a blog app.* The `Writer` has very similar attributes to what a `User` would have on say, a social media platform, there's a `username` attribute, a `bio`, who they work for, etc. I saw no need to create an Active Record association between these two particular models. I did, as required, include a `has_many :through` association between `Genre` and `Review`, which included the attendent join table, as well as a `has_many` `belongs_to` relationship between `Writer` and `Review`. The `Review` model was probably the most complex so I'll just throw it out in a code snippet.
 
 **Fig.1**
 *./app/models/review.rb*
@@ -66,7 +66,7 @@ class Comment < ApplicationRecord
 end
 ```
 
-Aside from their being a `Review_genre` join model for the `Review` and `Genre` association, I'll quickly cover more of the `User` model ihere, in particular, the `omniauth` gem. So getting this working was quite some process and I basically watched Avi's lecture on it right the end to eventually be able to get it right. However, in the end, it works a treat and I think I have a decent understanding of how the double handshake works and how the third party app authenticates a `User`. Below is the model including the class method required to write to the model. As an aside, after a fair bit of frustration, I decided to forgo Devise Pundit/CanCan and rolled my own authentication and authorization in this app.
+Aside from there being a `Review_genre` join model for the `Review` and `Genre` association, I'll quickly cover more of the `User` model here, in particular, the `omniauth` gem. So, getting this working was quite a process and I basically watched Avi's lecture on it right the end to eventually be able to get it right. However, after all, it works a treat and I think I have a decent understanding of how the double handshake works and how the third party app authenticates a `User`. Below is the model including the class method required to write to the model. As an aside, after a fair bit of frustration, I decided to forgo Devise Pundit/CanCan and rolled my own authentication and authorization in this app.
 
 **Fig.3**
 *./app/models/user.rb*
@@ -93,11 +93,36 @@ end
 
 **The Nested Nightmare**
 
-I had quite a fair bit of trouble with nested forms being saved when the parent object was being submitted. In the case of this app a `Review` `belongs_to` a `Writer` and a `Writer` `has_many` `Reviews`. I found that, possibly as a Rails 5 development (I'll look into it) that adding `inverse_of` after the association solves this issue. See the below snippet of the `Writer` model and the first line of **Fig.1**. I also had trouble incoprorating `Carrierwave`'s uploaders into the nested form and the only solution I could find was the use `accepts_nested_attributes_for`, which is a no no for this assessment. So I decided to remove validations for the images and when the `User` had complete the other input fields, upon submit, they would be rerouted to the edit page for that newly created `Review` and be directed to upload the required images by an alert box, this was far from ideal but it at least works. I think perhaps following my assessment I might implement the `accepts_nested_attributes_for` technique I found, or perhaps make a new template featuring fields only for the images and have the `User` be routed to that.
+I had quite a fair bit of trouble with nested forms being saved when the parent object was being submitted. In the case of this app a `Review` `belongs_to` a `Writer` and a `Writer` `has_many` `Reviews`. I found that, possibly as a Rails 5 development (I'll look into it) that adding `inverse_of` after the association solves this issue. See the below snippet of the `Writer` model and the first line of **Fig.1**. I also had trouble incoprorating `Carrierwave`'s uploaders into the nested form and the only solution I could find was the use `accepts_nested_attributes_for`, which is a 'no no' for this project. So I decided to remove validations for the images and when the `User` had complete the other input fields, upon submit, they would be rerouted to the edit page for that newly created `Review` and be directed to upload the required images by an alert box, this was far from ideal but it works at least. I think perhaps following my assessment I might implement the `accepts_nested_attributes_for` technique I found, or perhaps make a new template featuring fields only for the images and have the `User` be routed to that.
+
+```
+class Writer < ApplicationRecord
+  has_many :reviews, inverse_of: :writer, dependent: :destroy
+
+  validates_uniqueness_of :name
+  validates_presence_of :name, :publication, :bio
+  validates :name, :publication, length: { in: 3..25 }
+  validates :bio, length: { in: 100..3000 }
+
+  def lastest_review
+    self.reviews.order("created_at DESC").first
+  end
+
+  def review_list
+    self.reviews.order!(:title)
+  end
+
+  def reviews_attributes=(reviews_attributes)
+    reviews_attributes.each do |i, review_attributes|
+      self.reviews.build(review_attributes)
+    end
+  end
+end
+```
 
 **Controlling the Home Page**
 
-The only controller I'll go into in depth is the `HomeController`, the others have a fairly standard set up and are quite similar to one another and the `CommentsController` is covered in the link provided above. My index action's job was to fetch information from the `Review` model and populate the carousel feature within the home page's HTML (essentially the main item that the `User` encounters as a 'landing page'). In fact the only other stuff the `User` sees at this point is the `_header` and `_footer`. I had the index action perform the basic function of brining all the `Reviews` to one place and then letting the model do the rest.
+The only controller I'll go into in depth is the `HomeController`, the others have a fairly standard set up and are quite similar to one another and the `CommentsController` is covered in the link provided above. The index action's job was to fetch information from the `Review` model and populate the carousel feature within the home page's HTML (essentially the main item that the `User` encounters as a 'landing page' - in fact the only other stuff the `User` sees at this point is the `_header` and `_footer`). I had the index action perform the basic function of brining all the `Reviews` to one place and then letting the model do the rest.
 
 **Fig.5**
 *./app/controllers/home_controller.rb*
@@ -116,4 +141,4 @@ class HomeController < ApplicationController
 end
 ```
 
-The within the home page's carousel, I called `@reviews.latest_review` (or `@reviews.second_latest_review` and so on, respectively, for the last four `Reviews` uploaded) and then chained on the attributes I wanted to display such as `title` or `writer.name`. This would mean that my client could upload the latest review via the app's **admin role** user interface and expect to see the latest review be the first featured item on the carousel when a visitor navigates to the app's landing page. Referring back to **Fig.1**, inside the model, below my uploaders, I wrote four class scope methods with the above titles and used `offset`, then`limit` and first to capture and isolate the particlaur `Review` I wished for the model to return. This was a long project and even though I had other reasons for it taking some time, I do feel that I spent perhaps too much time on it, while I still have Javascript ahead of me. That said, it was a great deal of fun, I learnt a ton and I certainly got a kick out of these scathing critiques!
+The within the home page's carousel, I called `@reviews.latest_review` (or `@reviews.second_latest_review` and so on, respectively, for the last four `Reviews` uploaded) and then chained on the attributes I wanted to display such as `title` or `writer.name`. This would mean that my client could upload the latest review via the app's **admin role** user interface and expect to see the latest review be the first featured item on the carousel when a visitor navigates to the app's landing page. Referring back to **Fig.1**, inside the model, below my uploaders, I wrote four class scope methods with the above titles and used `offset`, then`limit` and first to capture and isolate the particlaur `Review` I wished for the model to return. This was a long project and even though I had other reasons for it taking some time, I do feel that I spent perhaps too much time dwelling on details and appear - all while I still have Javascript ahead of me. That said, it was a great deal of fun, I learnt a ton and I certainly got a laugh out of these scathing critiques!
