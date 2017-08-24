@@ -13,7 +13,7 @@ It's finally here. Two restarts, wrestling with Devise and then abondoning it wh
 
 **Models and Migrations**
 
-Of course, one of the many wonderful things (in this case a saving grace), about Rails, is that getting a function app off the ground and running can be done so rapidly. So, when you want to scrap everything and start over, twice, it really helps. I decided on three fundamental models that would form the core of the app: `Writer`, `Review` and `Genre`; the latter as stated above. `Genre` would actually be a very simple model that would only contain one attribute `genre_name`. The `Writer`, was effectively a kind of pseudo `User` model. It was seperate from the actual `User` model that I'll get to further down. I mean this in the sense that you do not **sign in** as a `Writer` - *this is not a blog app, this is not a blog app, this is not a blog app.* The `Writer` has very similar attributes to what a `User` would have on say, a social media platform, there's a `username` attribute, a `bio`, who they work for, etc. I saw no need to create an Active Record association between these two particular models. I did, as required, include a `has_many :through` association between `Genre` and `Review`, which included the attendent join table, as well as a `has_many` `belongs_to` relationship between `Writer` and `Review`. The `Review` model was probably the most complex so I'll just throw it out in a code snippet.
+Of course, one of the many wonderful things (in this case a saving grace), about Rails, is that getting a functional app off the ground and running can be done so rapidly. So, when you want to scrap everything and start over, twice, it really helps. I decided on three fundamental models that would form the core of the app: `Writer`, `Review` and `Genre`; the latter as stated above. `Genre` would actually be a very simple model that would only contain one attribute `genre_name`. The `Writer`, was effectively a kind of pseudo `User` model. It was seperate from the actual `User` model that I'll get to further down. I mean this in the sense that you do not **sign in** as a `Writer` - *this is not a blog app, this is not a blog app, this is not a blog app.* The `Writer` has very similar attributes to what a `User` would have on say, a social media platform, there's a `username` attribute, a `bio`, who they work for, etc. I saw no need to create an Active Record association between these two particular models. I did, as required, include a `has_many :through` association between `Genre` and `Review`, which included the attendent join table, as well as a `has_many` `belongs_to` relationship between `Writer` and `Review`. The `Review` model was probably the most complex so I'll just throw it out in a code snippet.
 
 **Fig.1**
 *./app/models/review.rb*
@@ -50,7 +50,7 @@ class Review < ApplicationRecord
     order("created_at DESC").offset(3).limit(1).first
   end
 	
-	  def self.last_five_reviews
+	def self.last_five_reviews
     last(5).reverse
   end
 
