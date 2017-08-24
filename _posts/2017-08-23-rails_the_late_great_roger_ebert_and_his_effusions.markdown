@@ -49,6 +49,14 @@ class Review < ApplicationRecord
   def self.fourth_latest_review
     order("created_at DESC").offset(3).limit(1).first
   end
+	
+	  def self.last_five_reviews
+    last(5).reverse
+  end
+
+  def self.ordered
+    order(:title).all
+  end
 end
 ```
 
