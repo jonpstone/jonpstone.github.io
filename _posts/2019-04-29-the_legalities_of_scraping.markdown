@@ -1,7 +1,7 @@
 ---
 layout: post
 title:      "The Legalities Of Scraping"
-date:       2019-04-29 21:10:34 +0000
+date:       2019-04-29 17:10:35 -0400
 permalink:  the_legalities_of_scraping
 ---
 
