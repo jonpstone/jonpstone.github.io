@@ -1,7 +1,7 @@
 ---
 layout: post
 title:      "My Code Life"
-date:       2019-05-03 02:53:49 +0000
+date:       2019-05-02 22:53:49 -0400
 permalink:  my_code_life
 ---
 
