@@ -1,7 +1,7 @@
 ---
 layout: post
 title:      "Something in the Pipeline"
-date:       2019-05-04 08:52:01 +0000
+date:       2019-05-04 04:52:01 -0400
 permalink:  something_in_the_pipeline
 ---
 
